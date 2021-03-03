@@ -1,5 +1,5 @@
 from basics import topbits, filter_sdic, unite_satdics, print_json
-from basics import vkdic_sat_test, vkdic_remove, FINAL, deb_01
+from basics import vkdic_sat_test, vkdic_remove, FINAL
 from vklause import VKlause
 from satholder import SatHolder
 from TransKlauseEngine import TxEngine

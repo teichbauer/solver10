@@ -14,9 +14,8 @@ class SatManager:
         for tsat in csats:
             for val, vk12dic in crmgr.raw_crown_dic.items():
                 if verify_sat(vk12dic, tsat):
-                crmgr.add_crown(val, vkdic, sfilter)
-
-            sats += hnode.crwnmgr.resolve(sfilter)
+                    pass
+            sats += hnode.crwnmgr.resolve(tsat)
         hnode.next = None
         hnode.sats = sats
         if hnode.parent:

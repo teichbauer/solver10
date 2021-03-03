@@ -1,10 +1,3 @@
-FINAL = {
-    'debug': False,
-    'limit': 10,
-    'sats': [],
-    'nov': 0    # to be set
-}
-
 
 def verify_sat(vkdic, sat):
     for vk in vkdic.values():
@@ -42,40 +35,6 @@ def get_sdic(filename):
     path = './configs/' + filename
     sdic = eval(open(path).read())
     return sdic
-
-
-def split_satfilter(filter_dic):
-    multi = []
-    sdic = {}
-    sat2keys = []
-    for k, v in filter_dic.items():
-        if v == 2:
-            sat2keys.append(k)
-        else:
-            sdic[k] = v
-    ln = len(sat2keys)
-    if ln == 0:
-        return [sdic]
-    else:
-        ds = []
-        if ln < 4:
-            L = 2 ** ln
-            for i in range(L):
-                d = {}
-                for ind, key in enumerate(sat2keys):
-                    bv = get_bit(i, ind)
-                    d[key] = bv
-                ds.append(d)
-            for d in ds:
-                sd = sdic.copy()
-                sd.update(d)
-                multi.append(sd)
-            return multi
-        else:
-            return {1: sdic, 2: sat2keys}
-            # msg = f'there are {ln} entries with :2'
-            # print(msg)
-            # raise Exception(f'TBD: {msg}')
 
 
 def ordered_dic_string(d):
@@ -237,44 +196,3 @@ def unite_satdics(s0, s1, extend=False):  # s1 as filter satdic
                 res[b] = s1[b]
     return res
 
-
-def deb_01(d):
-    if not d:
-        print('deb_01 input: None')
-        return
-    ln = len(d)
-    lst = sorted(list(d.items()), reverse=True)
-    if len(d) == 12:
-        if lst == [(11, 1), (10, 1), (9, 1), (8, 0), (7, 0), (6, 0), (5, 0), (4, 0), (3, 1), (2, 1), (1, 0), (0, 0)]:
-            msg = f'12.2.1==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 0), (5, 0), (4, 1), (3, 1), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.1==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 0), (5, 1), (4, 1), (3, 0), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.2==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 0), (5, 1), (4, 1), (3, 1), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.3==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 1), (5, 0), (4, 1), (3, 1), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.4==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 1), (5, 1), (4, 1), (3, 0), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.5==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 1), (5, 1), (4, 1), (3, 1), (2, 0), (1, 0), (0, 1)]:
-            msg = f'12.4.6==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 0), (5, 1), (4, 1), (3, 0), (2, 1), (1, 0), (0, 0)]:
-            msg = f'12.4.7==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 0), (5, 1), (4, 1), (3, 0), (2, 1), (1, 0), (0, 1)]:
-            msg = f'12.4.8==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 1), (8, 1), (7, 0), (6, 1), (5, 1), (4, 1), (3, 0), (2, 1), (1, 0), (0, 1)]:
-            msg = f'12.4.9==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 0), (8, 1), (7, 0), (6, 0), (5, 0), (4, 0), (3, 0), (2, 1), (1, 1), (0, 1)]:
-            msg = f'12.5.1==> {lst}'
-        if lst == [(11, 1), (10, 0), (9, 0), (8, 1), (7, 0), (6, 0), (5, 0), (4, 1), (3, 0), (2, 1), (1, 1), (0, 1)]:
-            msg = f'12.5.2==> {lst}'
-        if lst == [(11, 0), (10, 1), (9, 1), (8, 1), (7, 1), (6, 1), (5, 1), (4, 2), (3, 0), (2, 2), (1, 0), (0, 1)]:
-            msg = f'12.6.1==> {lst}'
-        if lst == [(11, 1), (10, 1), (9, 1), (8, 1), (7, 0), (6, 1), (5, 1), (4, 2), (3, 0), (2, 2), (1, 0), (0, 1)]:
-            msg = f'12.6.2==> {lst}'
-        else:
-            msg = f'|{ln}|==> {lst}'
-    else:
-        msg = f'|{ln}|==> {lst}'
-    print(msg)

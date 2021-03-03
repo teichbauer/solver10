@@ -1,6 +1,6 @@
 import sys
 import time
-from basics import get_sdic, topvalue, FINAL, ordered_dic_string, verify_sat
+from basics import get_sdic, topvalue, ordered_dic_string, verify_sat
 from satholder import SatHolder
 from satmgr import SatManager
 from satnode import SatNode
@@ -9,7 +9,6 @@ from vklause import VKlause
 
 
 def make_vkdic(kdic, nov):
-    FINAL['nov'] = nov
     vkdic = {}
     for kn, klause in kdic.items():
         vkdic[kn] = VKlause(kn, klause, nov)
@@ -74,9 +73,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) > 1:
         configfilename = sys.argv[1].strip()
-    if len(sys.argv) == 3:
-        FINAL['debug'] = sys.argv[2] != '0'
-
+    
     work(configfilename)
 
     x = 1
