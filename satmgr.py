@@ -12,7 +12,7 @@ class SatManager:
         else:
             csats = lnode.csats
         for tsat in csats:
-            for val, vk12dic in crmgr.raw_crown_dic.items():
+            for val, vk12dic in crmgr.chdic.items():
                 if verify_sat(vk12dic, tsat):
                     pass
             sats += hnode.crwnmgr.resolve(tsat)

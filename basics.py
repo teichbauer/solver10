@@ -1,7 +1,10 @@
 
-def verify_sat(vkdic, sat):
+def verify_sat(vkdic, sat, sh=None):
+    sdic = sat
+    if sh:
+        sdic = sh.reverse_sdic(sat)
     for vk in vkdic.values():
-        if vk.hit(sat):
+        if vk.hit(sdic):
             return False
     return True
 

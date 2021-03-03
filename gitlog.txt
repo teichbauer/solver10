@@ -1,3 +1,8 @@
+2021-03-03->0.136
+- basics/verify_sat now accpt sh, to reverse sat with sh.
+- satholder.reverse_sdic
+- crownmanager.raw_crown_dic moved to __init__, changed name: chdic
+- crownmgr.set_restrict impl; .parent ref to higher crownmgr.
 2021-03-02->0.135
 - clean up a bit
 2021-03-02->0.134

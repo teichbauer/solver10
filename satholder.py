@@ -32,6 +32,10 @@ class SatHolder:
                 d[self.varray[b]] = get_bit(x, b)
             yield d
 
+    def reverse_sdic(self,sdic):
+        ' for varray: [0,5,2], sdic{5:0, 2:1, 0:1} -> {1:0, 2:1, 0:1} '
+        return { self.varray.index(k): v for k, v in sdic.items() }
+
     def clone(self):
         return SatHolder(self.varray[:])
 

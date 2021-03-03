@@ -1,5 +1,5 @@
 from basics import topbits, filter_sdic, unite_satdics, print_json
-from basics import vkdic_sat_test, vkdic_remove, FINAL
+from basics import vkdic_sat_test, vkdic_remove
 from vklause import VKlause
 from satholder import SatHolder
 from TransKlauseEngine import TxEngine
@@ -35,11 +35,8 @@ class SatNode:
             self.tx_vkm = self.vkm.clone()
         self.tail_varray = self.sh.spawn_tail(3)
         next_sh = SatHolder(self.tail_varray[:])
-        self.crwnmgr = CrownManager(self, next_sh, self.nov - 3)
         self.sh.cut_tail(3)
-        # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
-        # and nov decreased by 3
-        self.crwnmgr.raw_crown_dic = self.tx_vkm.morph(self.topbits)
+        self.crwnmgr = CrownManager(self, next_sh, self.nov - 3)
         self.next_stuff = (next_sh.clone(), self.tx_vkm)
     # end of def prepare(self):
 
@@ -47,7 +44,7 @@ class SatNode:
         if self.done:
             return self.sats
         # after morph, vkm.vkdic only have vk3s left, if any
-        if len(self.crwnmgr.raw_crown_dic) == 0:
+        if len(self.crwnmgr.chdic) == 0:
             self.sats = None
             self.done = True
             return None
