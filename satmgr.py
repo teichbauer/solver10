@@ -6,14 +6,14 @@ class SatManager:
 
     def resolve(self, hnode, lnode):
         sats = []
-        crmgr = hnode.crwnmge
+        crmgr = hnode.crwnmgr
         if lnode.done:
-            csats = lnode.sh.fullsat_gen()
+            csats = lnode.sh.fullsat_gen()  # iterator
         else:
             csats = lnode.csats
         for tsat in csats:
-            for val, vk12dic in crmgr.chdic.items():
-                if verify_sat(vk12dic, tsat):
+            for val, chdic in crmgr.chdic.items():
+                if verify_sat(chdic['vk12dic'], tsat):
                     pass
             sats += hnode.crwnmgr.resolve(tsat)
         hnode.next = None

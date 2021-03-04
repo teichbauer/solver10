@@ -1,3 +1,9 @@
+2021-03-03->0.137
+- crownmanager.chdic now has 
+  ['vk12dic']={<vkdic>}
+  ['parent-ch-keys'] = [<int-keys of parent crwnmgr.chdic>]
+  ['hsat'] = {sat of head}
+- satmgr in progress
 2021-03-03->0.136
 - basics/verify_sat now accpt sh, to reverse sat with sh.
 - satholder.reverse_sdic

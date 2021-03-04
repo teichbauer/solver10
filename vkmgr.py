@@ -41,7 +41,7 @@ class VKManager:
                vk12. They are put into tdic, keyed by the top-bit value they
                cover
             '''
-        crowns = {}    # {<cvr-val>: {kn, ..},..}
+        chs = {}  # {<cvr-val>: {kn, ..},..}
         excl_cvs = set([])
         kns = list(self.vkdic.keys())
         self.nov -= 3  # top 3 bits will be cut off
@@ -56,12 +56,12 @@ class VKManager:
             ln = len(odic)
             if ln < vk.nob:  #
                 self.vkdic.pop(kn)
-                if ln == 0:     # vk is within topbits, no bit left
+                if ln == 0:  # vk is within topbits, no bit left
                     for v in cvr:  # collect vk's cover-value
                         excl_cvs.add(v)
-                else:           # vk has 1 / 2 bits cut away by topbits
-                    tdic.setdefault(tuple(cvr), []).append(
-                        VKlause(kn, odic, self.nov))
+                else:  # vk has 1 / 2 bits cut away by topbits
+                    tdic.setdefault(tuple(cvr),
+                                    []).append(VKlause(kn, odic, self.nov))
             else:  # vk.nob == ln: this vk3 remains in self.vkdic
                 vk.nov = self.nov
 
@@ -70,16 +70,18 @@ class VKManager:
         for val in range(8):
             if val in excl_cvs:
                 continue
-            vk12dic = crowns.setdefault(val, {})
+            # vk12dic = crowns.setdefault(val, {})
+            vk12dic = {}
             for cvr in tdic:
                 if val in cvr:  # touched kn/kv does have outside bit
                     vks = tdic[cvr]
                     for vk in vks:
                         vk12dic[vk.kname] = vk
-
+            chs[val] = {'vk12dic': vk12dic}
         # re-make self.bdic, based on updated vkdic (popped out all touched)
-        self.make_bdic()    # make the bdic for self.vkdic - all 3-bit vks
-        return crowns       # crowns for making crowns with node12
+        self.make_bdic()  # make the bdic for self.vkdic - all 3-bit vks
+        return chs  # crowns for making crowns with node12
+
     # enf of def morph()
 
     def bestchoice(self):
@@ -115,7 +117,7 @@ class VKManager:
             # {<share-any>}: set of kname: of vks sharing min 1 bit with kn
             #      it is a super-set of tsvk
             chc = (tsvk, tcvk - tsvk)
-            kns -= tsvk   # take kns in tsvk out of candidates-set
+            kns -= tsvk  # take kns in tsvk out of candidates-set
             ltsvk = len(tsvk)
             if ltsvk < max_tsleng:
                 continue
@@ -140,7 +142,7 @@ class VKManager:
                     if max_tcleng < ltcvk:
                         replace = True
                     else:
-                        bsum =  sum(bits)
+                        bsum = sum(bits)
                         if bsum > max_bitsum:
                             replace = True
                             max_bitsum = bsum
@@ -151,7 +153,7 @@ class VKManager:
                     best_bits = bits
         result = {
             'bestkey': tuple(sorted(list(best_choice[0]))),
-            'touched':  best_choice[1],
+            'touched': best_choice[1],
             'bits': best_bits
         }
         return result
