@@ -1,3 +1,6 @@
+2021-03-04->0.138
+- progress in SatMgr
+- fix in crownmgr
 2021-03-03->0.137
 - crownmanager.chdic now has 
   ['vk12dic']={<vkdic>}

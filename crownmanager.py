@@ -17,10 +17,10 @@ class CrownManager:
         self.set_restrict()
 
     def set_restrict(self):
-        if self.satnode.parent:
-            for val in self.chdic.keys():
-                hsat = self.satnode.sh.get_sats(val)
-                self.chdic[val]['hsat'] = hsat
+        for val in self.chdic.keys():
+            hsat = self.satnode.sh.get_sats(val)
+            self.chdic[val]['hsat'] = hsat
+            if self.satnode.parent:
                 pvs = []
                 for v, ch in self.parent.chdic.items():
                     if verify_sat(ch['vk12dic'], hsat, self.parent.sh):
