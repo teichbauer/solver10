@@ -33,7 +33,7 @@ class VKManager:
             1. the vks with no bits left-over. They are within the top bits
                the values within 3 bits, covered by these vks (excl_cvs), will 
                be taken away from 2**3 values.
-               rest of 2**3 values are the vals set into crowns
+               rest of 2**3 values are the vals set into chdic/vk12dic
                These vks will be taken off vkdic
             2. the vks with no bit in the top bit - they remain 3-bit vks
                they will have nov -= 3. They remain in vkdic
@@ -65,12 +65,11 @@ class VKManager:
             else:  # vk.nob == ln: this vk3 remains in self.vkdic
                 vk.nov = self.nov
 
-        # 2**3 == 8 - number of possible children of the satnoe, as crowns
-        # put into satnode.crownmgr.crowns list
+        # 2**3 == 8 - number of possible children of the satnoe, 
+        # put into satnode.chmgr.chdic
         for val in range(8):
             if val in excl_cvs:
                 continue
-            # vk12dic = crowns.setdefault(val, {})
             vk12dic = {}
             for cvr in tdic:
                 if val in cvr:  # touched kn/kv does have outside bit
@@ -80,7 +79,7 @@ class VKManager:
             chs[val] = {'vk12dic': vk12dic}
         # re-make self.bdic, based on updated vkdic (popped out all touched)
         self.make_bdic()  # make the bdic for self.vkdic - all 3-bit vks
-        return chs  # crowns for making crowns with node12
+        return chs  # for making chdic with node12
 
     # enf of def morph()
 

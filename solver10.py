@@ -1,6 +1,6 @@
 import sys
 import time
-from basics import get_sdic, topvalue, ordered_dic_string, verify_sat
+from basics import get_sdic, ordered_dic_string, verify_sat
 from satholder import SatHolder
 from satmgr import SatManager
 from satnode import SatNode

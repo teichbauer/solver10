@@ -6,7 +6,7 @@ class SatManager:
         self.limit = 2
 
     def resolve(self, hnode, lnode):
-        crmgr = hnode.crwnmgr
+        crmgr = hnode.chmgr
         if lnode.done:
             csats = lnode.sh.fullsat_gen()  # iterator
         else:
@@ -16,20 +16,21 @@ class SatManager:
                 if len(self.sats) >= self.limit:
                     print('limit reached')
 
-    def collect_sats(self, crwnmgr, 
+    def collect_sats(self, chmgr, 
                     test_sat, 
                     candis=None):
         rsat = test_sat.copy()
-        for val, ch in crwnmgr.chdic.items():
+        vksat = chmgr.sh.reverse_sdic(rsat)
+        for val, ch in chmgr.chdic.items():
             if candis==None or val in candis:
-                if verify_sat(ch['vk12dic'], rsat, crwnmgr.sh):
+                if verify_sat(ch['vk12dic'], vksat):
                     rsat.update(ch['hsat'])
-                    if crwnmgr.parent == None:
+                    if chmgr.parent == None:
                         self.sats.append(rsat)
                         return self.sats
                     else:
                         return self.collect_sats(
-                                    crwnmgr.parent, 
+                                    chmgr.parent, 
                                     rsat, 
                                     ch['parent-ch-keys'])
         return None

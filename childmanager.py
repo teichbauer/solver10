@@ -1,15 +1,14 @@
-from basics import filter_sdic, unite_satdics, oppo_binary, verify_sat
+from basics import verify_sat
 
 
-class CrownManager:
-    def __init__(self, satnode, sh, nov):
+class ChildManager:
+    def __init__(self, satnode, sh):
         self.satnode = satnode
-        self.parent = None  # crwnmgr of one level higher
+        self.parent = None  # child-mgr of one level higher
         if satnode.parent:
-            self.parent = satnode.parent.crwnmgr
+            self.parent = satnode.parent.chmgr
         self.sh = sh
-        self.nov = nov
-        self.state = 0
+        self.nov = satnode.nov
         # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
         # and nov decreased by 3
         # {vk12dic:{}, parent-ch-keys:[], hsat:{}}
@@ -20,14 +19,12 @@ class CrownManager:
         for val in self.chdic.keys():
             hsat = self.satnode.sh.get_sats(val)
             self.chdic[val]['hsat'] = hsat
-            if self.satnode.parent:
+            if self.parent:
+                vksat = self.parent.sh.reverse_sdic(hsat)
                 pvs = []
                 for v, ch in self.parent.chdic.items():
-                    if verify_sat(ch['vk12dic'], hsat, self.parent.sh):
+                    if verify_sat(ch['vk12dic'], vksat):
                         pvs.append(v)
                 if len(pvs) > 0:
                     # self.psearch_dic[val] = pvs
                     self.chdic[val]['parent-ch-keys'] = pvs
-
-    def build_sat(self, satmgr):
-        pass

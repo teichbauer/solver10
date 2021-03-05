@@ -1,3 +1,7 @@
+2021-03-06->0.139
+- yesterday, I did a all manual crawl through, finding all 9 sats correctly,
+  using the trees.
+- did some refactoring today
 2021-03-04->0.138
 - progress in SatMgr
 - fix in crownmgr

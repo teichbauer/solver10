@@ -4,7 +4,7 @@ from vklause import VKlause
 from satholder import SatHolder
 from TransKlauseEngine import TxEngine
 from vkmgr import VKManager
-from crownmanager import CrownManager
+from childmanager import ChildManager
 
 
 class SatNode:
@@ -36,7 +36,7 @@ class SatNode:
         self.tail_varray = self.sh.spawn_tail(3)
         next_sh = SatHolder(self.tail_varray[:])
         self.sh.cut_tail(3)
-        self.crwnmgr = CrownManager(self, next_sh, self.nov - 3)
+        self.chmgr = ChildManager(self, next_sh)
         self.next_stuff = (next_sh.clone(), self.tx_vkm)
     # end of def prepare(self):
 
@@ -44,7 +44,7 @@ class SatNode:
         if self.done:
             return self.sats
         # after morph, vkm.vkdic only have vk3s left, if any
-        if len(self.crwnmgr.chdic) == 0:
+        if len(self.chmgr.chdic) == 0:
             self.sats = None
             self.done = True
             return None
