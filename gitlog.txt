@@ -1,4 +1,8 @@
-2021-03-06->0.139
+2021-03-05->0.140
+- redesigned satholder/iterator going thru all :2's 
+- completed satmgr: it works for cfg12-55.json, finding all 9 sats
+  correctly (0.018388 secs)
+2021-03-05->0.139
 - yesterday, I did a all manual crawl through, finding all 9 sats correctly,
   using the trees.
 - did some refactoring today

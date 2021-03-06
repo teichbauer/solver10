@@ -25,16 +25,23 @@ class SatHolder:
         self.varray = varray
         self.ln = len(varray)
 
-    def fullsat_gen(self):
-        for x in range(2** self.ln):
-            d = {}
+    def val_gen(self):
+        for x in range(2 ** self.ln):
+            yield x
+
+    def next_sat(self, gen):
+        d = {}
+        try:
+            x = next(gen)
             for b in range(self.ln):
                 d[self.varray[b]] = get_bit(x, b)
-            yield d
+            return d
+        except:
+            return False
 
-    def reverse_sdic(self,sdic):
+    def reverse_sdic(self, sdic):
         ' for varray: [0,5,2], sdic{5:0, 2:1, 0:1} -> {1:0, 2:1, 0:1} '
-        return { self.varray.index(k): v for k, v in sdic.items() }
+        return {self.varray.index(k): v for k, v in sdic.items()}
 
     def clone(self):
         return SatHolder(self.varray[:])
