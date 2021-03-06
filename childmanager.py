@@ -9,10 +9,11 @@ class ChildManager:
             self.parent = satnode.parent.chmgr
         self.sh = sh
         self.nov = satnode.nov
+        self.vk12dic = {}
         # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
         # and nov decreased by 3
         # {vk12dic:{}, parent-ch-keys:[], hsat:{}}
-        self.chdic = satnode.tx_vkm.morph(satnode.topbits)
+        self.chdic = satnode.tx_vkm.morph(satnode.topbits, self.vk12dic)
         self.set_restrict()
 
     def set_restrict(self):

@@ -26,7 +26,7 @@ class VKManager:
         vkdic = tx.trans_vkdic(self.vkdic)
         return VKManager(vkdic, self.nov)
 
-    def morph(self, topbits):
+    def morph(self, topbits, vk12dic):
         ''' only called on a txed (best-vks condensed to top 3 bits) clone.
             ----------------------------------------------------------------
             After cut-off top 3 bits, there will be 3 groups of vks:
@@ -60,12 +60,16 @@ class VKManager:
                     for v in cvr:  # collect vk's cover-value
                         excl_cvs.add(v)
                 else:  # vk has 1 / 2 bits cut away by topbits
-                    tdic.setdefault(tuple(cvr),
-                                    []).append(VKlause(kn, odic, self.nov))
+                    if kn in vk12dic:
+                        vk12 = vk12dic[kn]
+                    else:
+                        vk12 = VKlause(kn, odic, self.nov)
+                        vk12dic[kn] = vk12
+                    tdic.setdefault(tuple(cvr), []).append(vk12)
             else:  # vk.nob == ln: this vk3 remains in self.vkdic
                 vk.nov = self.nov
 
-        # 2**3 == 8 - number of possible children of the satnoe, 
+        # 2**3 == 8 - number of possible children of the satnoe,
         # put into satnode.chmgr.chdic
         for val in range(8):
             if val in excl_cvs:

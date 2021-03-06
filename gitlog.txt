@@ -1,3 +1,6 @@
+2021-03-05->0.141
+- start working on cfg60-266.json: for some reason, it hangs.
+- childmanager holds a vk12dic, all chdic-vk12s are refs to this dic.
 2021-03-05->0.140
 - redesigned satholder/iterator going thru all :2's 
 - completed satmgr: it works for cfg12-55.json, finding all 9 sats
