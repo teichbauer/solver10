@@ -30,7 +30,8 @@ def process(cnfname):
         sn = sn.spawn()
 
     satmgr = SatManager()
-    satmgr.resolve(sn.parent, sn)
+    satmgr.build_solutions(sn.parent)
+    # satmgr.resolve(sn.parent, sn)
 
     return satmgr.sats
 
@@ -65,11 +66,11 @@ def work(configfilename, verify=True):
 if __name__ == '__main__':
     global FINAL
     # configfilename = 'cfg100-450.json'
-    configfilename = 'cfg60-266.json'
+    # configfilename = 'cfg60-266.json'
     # configfilename = 'cfg60-262.json'
     # configfilename = 'config1.json'
     # configfilename = 'cfg12-45.json'
-    # configfilename = 'cfg12-55.json'
+    configfilename = 'cfg12-55.json'
 
     if len(sys.argv) > 1:
         configfilename = sys.argv[1].strip()

@@ -1,3 +1,9 @@
+2021-03-09->0.142
+- when reaching the last satnode, when vk3dic is empty, in case of cfg6-266.json
+  the nov is 27, to do an exhaustive looping thru of 2**27, is exponential / bad 
+  I did, consuming last 2 days (for test case of cfg12-55), how to do that in
+  getting all possible sats in the satnode(nov3), and I am trying now to do this
+  not with exhaustive going thru all 2**3(2**27).
 2021-03-05->0.141
 - start working on cfg60-266.json: for some reason, it hangs.
 - childmanager holds a vk12dic, all chdic-vk12s are refs to this dic.
