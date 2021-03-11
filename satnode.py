@@ -13,7 +13,7 @@ class SatNode:
         self.sh = sh
         self.vkm = vkm
         self.nov = vkm.nov
-        self.name = f'sn-{self.nov}'
+        self.name = f'sn{self.nov}'
         self.sats = None
         self.topbits = topbits(self.nov, 3)
         self.next = None

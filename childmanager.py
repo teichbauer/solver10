@@ -20,6 +20,7 @@ class ChildManager:
             build a pvs containing child-keys of the children that are 
             compatible, set chdic[val]['parent-ch-keys'] = pvs
             '''
+        del_chs = []
         for val in self.chdic.keys():
             hsat = self.satnode.sh.get_sats(val)
             self.chdic[val]['hsat'] = hsat
@@ -33,3 +34,7 @@ class ChildManager:
                 if len(pvs) > 0:
                     # self.psearch_dic[val] = pvs
                     self.chdic[val]['parent-ch-keys'] = pvs
+                else:
+                    del_chs.append(val)
+        for chval in del_chs:
+            del self.chdic[chval]

@@ -1,3 +1,5 @@
+2021-03-11->0.146
+- git check-in, minor changes, but win10 has issue? be safe
 2021-03-11->0.145
 - fix in vkmgr/bestchoice: max_bitsum -> best_bitsum.
 - tnode: when made, check its integrity: state=-1 when conflict makes it
