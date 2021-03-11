@@ -83,10 +83,13 @@ class VKManager:
                     vks = tdic[cvr]
                     for vk in vks:
                         sub_vk12dic[vk.kname] = vk
-            chs[val] = {'tnode': TNode(sub_vk12dic, chmgr.sh)}
-        # re-make self.bdic, based on updated vkdic (popped out all touched)
-        self.make_bdic()  # make the bdic for self.vkdic - all 3-bit vks
-        return chs  # for making chdic with node12
+            print(f'child-{val}')
+            tnode = TNode(sub_vk12dic, chmgr.sh)
+            if tnode.state == 0:
+                chs[val] = {'tnode': tnode}
+        # re-make self.bdic, based on updated vkdic (now all 3-bit vks)
+        self.make_bdic()  # bdic made here will be used for .next/bestchoice
+        return chs  # for making chdic with tnodes
 
     # enf of def morph()
 
@@ -99,7 +102,7 @@ class VKManager:
         best_choice = None
         max_tsleng = -1
         max_tcleng = -1
-        max_bitsum = -1  # final ranking: bits sitting higher
+        best_bitsum = -1  # final ranking: bits sitting higher
         best_bits = None
         kns = set(self.vkdic.keys())  # candidates-set of kn for besy-key
         while len(kns) > 0:
@@ -128,6 +131,7 @@ class VKManager:
             if ltsvk < max_tsleng:
                 continue
             ltcvk = len(tcvk)
+            bsum = sum(bits)
             # insert into choices list: bigger front
             # if equal: dont insert
             # 1: find index of insertion
@@ -136,7 +140,7 @@ class VKManager:
                 max_tsleng = ltsvk
                 max_tcleng = ltcvk
                 best_bits = bits
-                max_bitsum = sum(bits)
+                best_bitsum = sum(bits)
             else:
                 if best_choice[0] == tsvk:
                     continue
@@ -148,15 +152,14 @@ class VKManager:
                     if max_tcleng < ltcvk:
                         replace = True
                     else:
-                        bsum = sum(bits)
-                        if bsum > max_bitsum:
+                        if bsum > best_bitsum:
                             replace = True
-                            max_bitsum = bsum
                 if replace:
                     best_choice = chc
                     max_tsleng = ltsvk
                     max_tcleng = ltcvk
                     best_bits = bits
+                    best_bitsum = bsum
         result = {
             'bestkey': tuple(sorted(list(best_choice[0]))),
             'touched': best_choice[1],

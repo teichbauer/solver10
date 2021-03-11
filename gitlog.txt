@@ -1,3 +1,7 @@
+2021-03-11->0.145
+- fix in vkmgr/bestchoice: max_bitsum -> best_bitsum.
+- tnode: when made, check its integrity: state=-1 when conflict makes it
+  impossible to stand: this tnode will not be assigned to ch[val].
 2021-03-11->0.144
 - fixes in restrict and tnode
 2021-03-10->0.143

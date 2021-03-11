@@ -10,6 +10,7 @@ class ChildManager:
         self.sh = sh
         self.nov = satnode.nov
         self.vk12dic = {}  # all vk12 objs ref-ed by chdic[v]['tnode']
+        print(f'satnode: {satnode.name}')
         self.chdic = satnode.tx_vkm.morph(satnode, self)
         self.set_restrict()
 

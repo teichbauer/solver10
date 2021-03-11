@@ -11,14 +11,6 @@ class Restrict:
         self.block_pairs = []
         self.thru = True
 
-    def set_cflt_condition(self, vk12dic):
-        for vk in vk12dic.values():
-            if vk.nob == 1:
-                b = vk.bits[0]
-                self.conditional_conflicts.append((b, vk.dic[b]))
-            else:
-                pass
-
     def add_cconflict(self, cdic):
         if type(cdic) == type(()):
             if cdic not in self.conditional_conflicts:

@@ -12,6 +12,37 @@ class TNode:
         self.set_bmap()
         self._proc_vk1s()
         self._proc_vk2s()
+        self.check_state()
+
+    def check_state(self):
+        self.state = 0
+        dic = {}
+        for p in self.restrict.conditional_conflicts:
+            if p[0] in dic:
+                if p[1] != dic[p[0]]:
+                    self.state = -1
+                    break
+            else:
+                dic[p[0]] = p[1]
+
+    def _proc_vk1s(self):
+        kns = self.kn1s[:]
+        while len(kns) > 0:
+            kn = kns.pop()
+            vk = self.vkdic.get(kn, None)
+            if not vk:
+                continue  # kn may has been popped out from vkdic
+            bit = vk.bits[0]
+            allkns = list(self.vkdic.keys())
+            allkns.remove(kn)
+            for kx in allkns:
+                vkx = self.vkdic[kx]
+                if bit in vkx.bits:
+                    if vkx.dic[bit] == vk.dic[bit]:
+                        self._remove_kn(kx)
+            # a vk1 makes a conditional-conflict entry
+            self.restrict.add_cconflict((bit, vk.dic[bit]))
+    # end of _proc_vk1s ----------------------------------------
 
     def _proc_vk2s(self):
         sames = []
@@ -34,32 +65,27 @@ class TNode:
             bs = vk.bits
         # kick out sames
         for kn in sames:
-            vk = self.vkdic.pop(kn)
-            index = -1
+            self._remove_kn(kn)
+    # end of _proc_vk2s ----------------------------------------
+
+    def _remove_kn(self, kn):
+        vk = self.vkdic.pop(kn, None)
+        if vk:
+            if vk.nob == 1:
+                if kn in self.kn1s:
+                    self.kn1s.remove(kn)
+            elif vk.nob == 2:
+                if kn in self.kn2s:
+                    self.kn2s.remove(kn)
             for b in vk.bits:
+                index = -1
                 for ind, t in enumerate(self.bmap[b]):
-                    if t[0] == vk.kname:
+                    if t[0] == kn:
                         index = ind
                         break
                 if index > -1:
                     self.bmap[b].pop(index)
-                    index = -1
-
-    def _proc_vk1s(self):
-        for kn1 in self.kn1s:
-            vk1 = self.vkdic[kn1]
-            bit = vk1.bits[0]
-            val = vk1.dic[bit]
-            lst = self.bmap[bit]
-            ind = 0
-            while ind < len(lst):
-                if lst[ind][0] == kn1 or lst[ind][1] != val:
-                    ind += 1
-                else:  # vk(not vk1) on the same bit, with the same val
-                    self.vkdic.pop(lst[ind][0])
-                    lst.pop(ind)
-            # a vk1 makes a conditional-conflict entry
-            self.restrict.add_cconflict((bit, val))
+    # end of _remove_kn ----------------------------------------
 
     def _sort12(self):
         self.kn1s = []
