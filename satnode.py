@@ -34,10 +34,14 @@ class SatNode:
         else:
             self.tx_vkm = self.vkm.clone()
         self.tail_varray = self.sh.spawn_tail(3)
-        next_sh = SatHolder(self.tail_varray[:])
+        self.next_sh = SatHolder(self.tail_varray[:])
         self.sh.cut_tail(3)
-        self.chmgr = ChildManager(self, next_sh)
-        self.next_stuff = (next_sh.clone(), self.tx_vkm)
+
+        # ChildManager constructor will call self.tx_vkm.morph in it,
+        # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
+        # and nov decreased by 3. This will be used in spawning self.next
+        self.chmgr = ChildManager(self, self.next_sh.clone())
+        # self.next_stuff = (next_sh.clone(), self.tx_vkm)
     # end of def prepare(self):
 
     def spawn(self):
@@ -49,9 +53,8 @@ class SatNode:
             self.done = True
             return None
 
-        self.next = SatNode(self, self.next_stuff[0], self.next_stuff[1])
+        self.next = SatNode(self, self.next_sh, self.tx_vkm)
         return self.next
-
 
     def verify_tail_sat(self, vkdic, sat):
         for vk in vkdic.values():
@@ -64,4 +67,3 @@ class SatNode:
             if not Skip:
                 return False
         return sat
-

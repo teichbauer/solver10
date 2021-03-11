@@ -4,16 +4,32 @@ from basics import verify_sat, set_bit
 class SatManager:
     def __init__(self):
         self.sats = []
+        # candis: list of tuples.
+        # each tuple: ([<ch>,<ch>,..], <tsat-dic>), where
+        # ch is an entry in childmgr.chdic:
+        #   {'tnode':<tnode>, 'hsat':{,,}, 'parent-ch-keys':[1,2,..]}
+        # tsat-dic is a dict, for restricting tail-part of the sh:
+        #   key:bit/var, value: 0,1 or 2(wild-card)
+        self.candis = []
         self.satpaths = {}
         self.limit = 10
 
-    def sat_val(self, sat):
-        value = 0
-        for b, v in sat.items():
-            value = set_bit(value, b, v)
-        return value
+    def build_candis(self, snode):
+        for val, ch in snode.chmgr.chdic.items():
+            pvs = ch['parent-ch-keys']
+            ch['tnode'].find_candis(snode.chmgr.parent, pvs, self.candis)
 
-    def build_solutions(self, snode, path=None, vals=None, vk12dic=None):
+    def convert_sat(self, candi):
+        sat = {}
+        return sat
+
+    def build_solutions(self, snode):
+        self.build_candis(snode)
+        for candi in candis:
+            sat = self.convert_sat(candi)
+            self.sats.append(sat)
+
+    def build_solutions0(self, snode, path=None, vals=None, vk12dic=None):
         if snode == None:
             return
         if path == None:
@@ -40,6 +56,7 @@ class SatManager:
             scnt = 0
             for val in vals:
                 ch = snode.chmgr.chdic[val]
+
                 if self.check_conflict(vk12dic, ch['vk12dic'], path):
                     self.collect(ch, path)
                     res = self.build_solutions(
@@ -61,6 +78,12 @@ class SatManager:
 
     def collect(self, ch, path):
         pass
+
+    def sat_val(self, sat):
+        value = 0
+        for b, v in sat.items():
+            value = set_bit(value, b, v)
+        return value
 
     def resolve(self, hnode, lnode):
         chmgr = hnode.chmgr

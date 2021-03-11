@@ -1,3 +1,5 @@
+2021-03-10->0.143
+- restrict.py, tnode.py
 2021-03-09->0.142
 - when reaching the last satnode, when vk3dic is empty, in case of cfg6-266.json
   the nov is 27, to do an exhaustive looping thru of 2**27, is exponential / bad 

@@ -1,4 +1,4 @@
-from basics import verify_sat
+# from basics import verify_sat
 
 
 class ChildManager:
@@ -9,14 +9,16 @@ class ChildManager:
             self.parent = satnode.parent.chmgr
         self.sh = sh
         self.nov = satnode.nov
-        self.vk12dic = {}
-        # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
-        # and nov decreased by 3
-        # {vk12dic:{}, parent-ch-keys:[], hsat:{}}
-        self.chdic = satnode.tx_vkm.morph(satnode.topbits, self.vk12dic)
+        self.vk12dic = {}  # all vk12 objs ref-ed by chdic[v]['tnode']
+        self.chdic = satnode.tx_vkm.morph(satnode, self)
         self.set_restrict()
 
     def set_restrict(self):
+        ''' for every child C in chdic, check which children of 
+            self.satnode.chdic, are compatible with C, (allows vksat)
+            build a pvs containing child-keys of the children that are 
+            compatible, set chdic[val]['parent-ch-keys'] = pvs
+            '''
         for val in self.chdic.keys():
             hsat = self.satnode.sh.get_sats(val)
             self.chdic[val]['hsat'] = hsat
@@ -24,7 +26,8 @@ class ChildManager:
                 vksat = self.parent.sh.reverse_sdic(hsat)
                 pvs = []
                 for v, ch in self.parent.chdic.items():
-                    if verify_sat(ch['vk12dic'], vksat):
+                    if ch['tnode'].check_sat(vksat):
+                        # if verify_sat(ch['vk12dic'], vksat):
                         pvs.append(v)
                 if len(pvs) > 0:
                     # self.psearch_dic[val] = pvs

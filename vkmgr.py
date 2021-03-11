@@ -1,5 +1,6 @@
 from basics import topbits_coverages, print_json
 from vklause import VKlause
+from tnode import TNode
 
 
 class VKManager:
@@ -26,12 +27,13 @@ class VKManager:
         vkdic = tx.trans_vkdic(self.vkdic)
         return VKManager(vkdic, self.nov)
 
-    def morph(self, topbits, vk12dic):
+    # def morph(self, snode, vk12dic):
+    def morph(self, snode, chmgr):
         ''' only called on a txed (best-vks condensed to top 3 bits) clone.
             ----------------------------------------------------------------
             After cut-off top 3 bits, there will be 3 groups of vks:
             1. the vks with no bits left-over. They are within the top bits
-               the values within 3 bits, covered by these vks (excl_cvs), will 
+               the values within 3 bits, covered by these vks (excl_cvs), will
                be taken away from 2**3 values.
                rest of 2**3 values are the vals set into chdic/vk12dic
                These vks will be taken off vkdic
@@ -49,10 +51,11 @@ class VKManager:
         # tdic: dict for every touched vk: all are vk12, vk3 are in self.vkdic
         # key: tuple of covered-values, value: list of vks that
         # have the same covered-values
-        tdic = {}  # tdic purposed for vk12dic -> later vk12m
+        # tdic for fill-in chmgr.vk12dic, and subset(vks) of it for tnode
+        tdic = {}
         for kn in kns:
             vk = self.vkdic[kn]
-            cvr, odic = topbits_coverages(vk, topbits)
+            cvr, odic = topbits_coverages(vk, snode.topbits)
             ln = len(odic)
             if ln < vk.nob:  #
                 self.vkdic.pop(kn)
@@ -60,11 +63,11 @@ class VKManager:
                     for v in cvr:  # collect vk's cover-value
                         excl_cvs.add(v)
                 else:  # vk has 1 / 2 bits cut away by topbits
-                    if kn in vk12dic:
+                    if kn in chmgr.vk12dic:
                         vk12 = vk12dic[kn]
                     else:
                         vk12 = VKlause(kn, odic, self.nov)
-                        vk12dic[kn] = vk12
+                        chmgr.vk12dic[kn] = vk12
                     tdic.setdefault(tuple(cvr), []).append(vk12)
             else:  # vk.nob == ln: this vk3 remains in self.vkdic
                 vk.nov = self.nov
@@ -74,13 +77,13 @@ class VKManager:
         for val in range(8):
             if val in excl_cvs:
                 continue
-            vk12dic = {}
+            sub_vk12dic = {}
             for cvr in tdic:
                 if val in cvr:  # touched kn/kv does have outside bit
                     vks = tdic[cvr]
                     for vk in vks:
-                        vk12dic[vk.kname] = vk
-            chs[val] = {'vk12dic': vk12dic}
+                        sub_vk12dic[vk.kname] = vk
+            chs[val] = {'tnode': TNode(sub_vk12dic, chmgr.sh)}
         # re-make self.bdic, based on updated vkdic (popped out all touched)
         self.make_bdic()  # make the bdic for self.vkdic - all 3-bit vks
         return chs  # for making chdic with node12
