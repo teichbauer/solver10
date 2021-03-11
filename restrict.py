@@ -21,9 +21,10 @@ class Restrict:
 
     def add_cconflict(self, cdic):
         if type(cdic) == type(()):
-            self.conditional_conflicts.append(cdic)
+            if cdic not in self.conditional_conflicts:
+                self.conditional_conflicts.append(cdic)
         elif type(cdic) == type({}):
-            self.conditional_conflicts.append(list(cdic)[0])
+            self.add_cconflict(list(cdic)[0])
 
     def check_conflict(self, sdic):
         if len(self.conditional_conflicts) > 0:
@@ -56,9 +57,8 @@ class Restrict:
         return thru
 
     def add_bpair(self, pdic):
-        if pdic in self.block_pairs:
-            return
-        self.block_pairs.append(pdic)
+        if pdic not in self.block_pairs:
+            self.block_pairs.append(pdic)
 
     def check(self, sdic):
         return self.check_block_pairs(sdic) and \

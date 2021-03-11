@@ -10,12 +10,11 @@ class TNode:
         self.restrict = Restrict(t_sh)
         self.bmap = {}
         self.set_bmap()
-        self._proc_vk2s()
+        self._proc_vk1s()
         self._proc_vk2s()
 
     def _proc_vk2s(self):
         sames = []
-        oppos = []
         kns = self.kn2s[:]
         vk = self.vkdic[kns.pop()]
         bs = vk.bits
@@ -27,7 +26,24 @@ class TNode:
                         if vk.dic[bs[1]] == vkx.dic[bs[1]]:
                             sames.append(vkx.kname)
                         else:
-                            oppos.append()
+                            self.restrict.add_cconflict((bs[0], vk.dic[bs[0]]))
+                    else:  # bs[0]: diff values
+                        if vk.dic[bs[1]] == vkx.dic[bs[1]]:
+                            self.restrict.add_cconflict((bs[1], vk.dic[bs[1]]))
+            vk = self.vkdic[kns.pop()]
+            bs = vk.bits
+        # kick out sames
+        for kn in sames:
+            vk = self.vkdic.pop(kn)
+            index = -1
+            for b in vk.bits:
+                for ind, t in enumerate(self.bmap[b]):
+                    if t[0] == vk.kname:
+                        index = ind
+                        break
+                if index > -1:
+                    self.bmap[b].pop(index)
+                    index = -1
 
     def _proc_vk1s(self):
         for kn1 in self.kn1s:
@@ -59,7 +75,6 @@ class TNode:
             for b, v in vk.dic.items():
                 lst = self.bmap.setdefault(b, [])
                 lst.append((kn, v))
-        self._proc_vk2s()
     # end of set_bmap ----------------------------------------
 
     def check_sat(self, sdic):
