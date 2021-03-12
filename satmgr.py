@@ -17,6 +17,7 @@ class SatManager:
         self.limit = 10
 
     def build_candi_dic(self):
+        pass
 
     def build_candis(self, snode):
         for ch in snode.chdic.values():

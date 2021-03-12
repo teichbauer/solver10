@@ -84,7 +84,7 @@ class VKManager:
                     for vk in vks:
                         sub_vk12dic[vk.kname] = vk
             print(f'child-{val}')
-            tnode = TNode(sub_vk12dic, self.next_sh.clone())
+            tnode = TNode(sub_vk12dic, snode.next_sh.clone())
             if tnode.state == 0:
                 chs[val] = {'tnode': tnode}
         # re-make self.bdic, based on updated vkdic (now all 3-bit vks)

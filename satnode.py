@@ -50,7 +50,7 @@ class SatNode:
         if len(self.tx_vkm.vkdic) == 0:
             self.next = EndNode(self, self.next_sh)
         else:
-            self.next = SatNode(self, self.next_sh, self.tx_vkm)
+            self.next = SatNode(self, self.next_sh.clone(), self.tx_vkm)
         return self.next
 
     def restrict_chs(self):
@@ -64,7 +64,7 @@ class SatNode:
             hsat = self.sh.get_sats(val)
             self.chdic[val]['hsat'] = hsat
             if self.parent:
-                vksat = self.parent.sh.reverse_sdic(hsat)
+                vksat = self.parent.next_sh.reverse_sdic(hsat)
                 pvs = []
                 for v, ch in self.parent.chdic.items():
                     if ch['tnode'].check_sat(vksat):
