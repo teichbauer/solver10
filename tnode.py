@@ -45,6 +45,8 @@ class TNode:
     # end of _proc_vk1s ----------------------------------------
 
     def _proc_vk2s(self):
+        if len(self.kn2s) == 0:
+            return
         sames = []
         kns = self.kn2s[:]
         vk = self.vkdic[kns.pop()]
@@ -106,8 +108,29 @@ class TNode:
     def check_sat(self, sdic):
         return verify_sat(self.vkdic, sdic)
 
-    def find_candis(self, pchmgr, pvs, candis):
-        pass
+    def find_candis(self, hsats, psatnode, pvs):
+        sdic = {}
+        for sat in hsats[1:]:
+            sdic.update(sat)
+
+        for ch in psatnode.chdic.values():
+            hsat = ch[hsat]
+
+            candi = hsats[:]
+            candi.insert(0, ch['hsat'])
+            succ = ch['tnode'].check_sat()
+
+        succ = True
+        i = 1
+        while succ and i < len(hsats):
+            succ = self.check_sat(hsats[i])
+            i += 1
+        if succ:
+            if psatnode == None:
+                return []
+
+        for ch in psatnode.chdic.values():
+            candi = [ch['hsat'], hsat]
 
     def compatible_with(self, higher_tnode, restrict=None):
         return restrict

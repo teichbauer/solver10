@@ -1,10 +1,8 @@
 from basics import topbits, filter_sdic, unite_satdics, print_json
 from basics import vkdic_sat_test, vkdic_remove
-from vklause import VKlause
 from satholder import SatHolder
 from TransKlauseEngine import TxEngine
-from vkmgr import VKManager
-from childmanager import ChildManager
+from endnode import EndNode
 
 
 class SatNode:
@@ -18,11 +16,7 @@ class SatNode:
         self.topbits = topbits(self.nov, 3)
         self.next = None
         self.done = False
-        if len(vkm.vkdic) == 0:
-            self.sats = None  # self.sh.full_sats() all :2 means: no filter
-            self.done = True
-        else:
-            self.prepare()
+        self.prepare()
 
     def prepare(self):
         choice = self.vkm.bestchoice()
@@ -37,33 +31,49 @@ class SatNode:
         self.next_sh = SatHolder(self.tail_varray[:])
         self.sh.cut_tail(3)
 
-        # ChildManager constructor will call self.tx_vkm.morph in it,
+        self.vk12dic = {}  # store all vk12s, all tnode's vkdic ref to here
         # after tx_vkm.morph, tx_vkm only has (.vkdic) vk3 left, if any
-        # and nov decreased by 3. This will be used in spawning self.next
-        self.chmgr = ChildManager(self, self.next_sh.clone())
-        # self.next_stuff = (next_sh.clone(), self.tx_vkm)
+        # and tx_vkm.nov decreased by 3, used in spawning self.next
+        self.chdic = self.tx_vkm.morph(self)
+        self.restrict_chs()
+
     # end of def prepare(self):
 
     def spawn(self):
         if self.done:
             return self.sats
         # after morph, vkm.vkdic only have vk3s left, if any
-        if len(self.chmgr.chdic) == 0:
+        if len(self.chdic) == 0:
             self.sats = None
             self.done = True
             return None
-
-        self.next = SatNode(self, self.next_sh, self.tx_vkm)
+        if len(self.tx_vkm.vkdic) == 0:
+            self.next = EndNode(self, self.next_sh)
+        else:
+            self.next = SatNode(self, self.next_sh, self.tx_vkm)
         return self.next
 
-    def verify_tail_sat(self, vkdic, sat):
-        for vk in vkdic.values():
-            Skip = False
-            for b, v in vk.dic.items():
-                key = self.tail_varray[b]
-                if sat[key] != v:
-                    Skip = True
-                    break
-            if not Skip:
-                return False
-        return sat
+    def restrict_chs(self):
+        ''' for every child C in chdic, check which children of 
+            self.satnode.chdic, are compatible with C, (allows vksat)
+            build a pvs containing child-keys of the children that are 
+            compatible, set chdic[val]['parent-ch-keys'] = pvs
+            '''
+        del_chs = []
+        for val in self.chdic.keys():
+            hsat = self.sh.get_sats(val)
+            self.chdic[val]['hsat'] = hsat
+            if self.parent:
+                vksat = self.parent.sh.reverse_sdic(hsat)
+                pvs = []
+                for v, ch in self.parent.chdic.items():
+                    if ch['tnode'].check_sat(vksat):
+                        # if verify_sat(ch['vk12dic'], vksat):
+                        pvs.append(v)
+                if len(pvs) > 0:
+                    # self.psearch_dic[val] = pvs
+                    self.chdic[val]['parent-ch-keys'] = pvs
+                else:
+                    del_chs.append(val)
+        for chval in del_chs:
+            del self.chdic[chval]

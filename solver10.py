@@ -26,12 +26,13 @@ def process(cnfname):
     sh = SatHolder(satslots)
 
     sn = SatNode(None, sh, vkm)
-    while sn and not sn.done:
+    while sn.__class__.__name__ == 'SatNode':
         sn = sn.spawn()
+    # sn is of class EndNode now
 
     satmgr = SatManager()
     satmgr.build_solutions(sn.parent)
-    # satmgr.resolve(sn.parent, sn)
+    # satmgr.resolve(sn)
 
     return satmgr.sats
 

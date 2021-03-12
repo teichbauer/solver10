@@ -34,6 +34,15 @@ class VKlause:
         else:
             return None
 
+    def clone_tail(self, tail_sat, nov):
+        d = {}
+        for b, v in self.dic.items():
+            if b in tail_sat:
+                d[b] = v
+        if len(d) > 0:
+            return VKlause(self.kname, d, tail_sat, nov)
+        return None
+
     def set_value_and_mask(self):
         ''' For the example klause { 7:1,  5:0,     2:1      }
                               BITS:   7  6  5  4  3  2  1  0
@@ -76,9 +85,8 @@ class VKlause:
             hit_cnt = 0
             i = 0
             while (not hit) and i < self.nob:
-                k = self.bits[i] 
+                k = self.bits[i]
                 if k in v and v[k] == self.dic[k]:
                     hit_cnt += 1
                 i += 1
             return hit_cnt == self.nob
-

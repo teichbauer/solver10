@@ -28,7 +28,7 @@ class VKManager:
         return VKManager(vkdic, self.nov)
 
     # def morph(self, snode, vk12dic):
-    def morph(self, snode, chmgr):
+    def morph(self, snode):
         ''' only called on a txed (best-vks condensed to top 3 bits) clone.
             ----------------------------------------------------------------
             After cut-off top 3 bits, there will be 3 groups of vks:
@@ -51,7 +51,7 @@ class VKManager:
         # tdic: dict for every touched vk: all are vk12, vk3 are in self.vkdic
         # key: tuple of covered-values, value: list of vks that
         # have the same covered-values
-        # tdic for fill-in chmgr.vk12dic, and subset(vks) of it for tnode
+        # tdic for fill-in snode.vk12dic, and subset(vks) of it for tnode
         tdic = {}
         for kn in kns:
             vk = self.vkdic[kn]
@@ -63,17 +63,17 @@ class VKManager:
                     for v in cvr:  # collect vk's cover-value
                         excl_cvs.add(v)
                 else:  # vk has 1 / 2 bits cut away by topbits
-                    if kn in chmgr.vk12dic:
-                        vk12 = vk12dic[kn]
+                    if kn in snode.vk12dic:
+                        vk12 = snode.vk12dic[kn]
                     else:
                         vk12 = VKlause(kn, odic, self.nov)
-                        chmgr.vk12dic[kn] = vk12
+                        snode.vk12dic[kn] = vk12
                     tdic.setdefault(tuple(cvr), []).append(vk12)
             else:  # vk.nob == ln: this vk3 remains in self.vkdic
                 vk.nov = self.nov
 
         # 2**3 == 8 - number of possible children of the satnoe,
-        # put into satnode.chmgr.chdic
+        # put into satnode.chdic
         for val in range(8):
             if val in excl_cvs:
                 continue
@@ -84,7 +84,7 @@ class VKManager:
                     for vk in vks:
                         sub_vk12dic[vk.kname] = vk
             print(f'child-{val}')
-            tnode = TNode(sub_vk12dic, chmgr.sh)
+            tnode = TNode(sub_vk12dic, self.next_sh.clone())
             if tnode.state == 0:
                 chs[val] = {'tnode': tnode}
         # re-make self.bdic, based on updated vkdic (now all 3-bit vks)
