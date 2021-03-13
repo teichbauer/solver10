@@ -57,22 +57,21 @@ class SatNode:
         ''' for every child C in chdic, check which children of 
             self.satnode.chdic, are compatible with C, (allows vksat)
             build a pvs containing child-keys of the children that are 
-            compatible, set chdic[val]['parent-ch-keys'] = pvs
+            compatible, set chdic[val].pvs
             '''
         del_chs = []
-        for val in self.chdic.keys():
-            hsat = self.sh.get_sats(val)
-            self.chdic[val]['hsat'] = hsat
+        for val, tnode in self.chdic.items():
+            # hsat = self.sh.get_sats(val)
+            hsat = tnode.hsat
+            # self.chdic[val]['hsat'] = hsat
             if self.parent:
                 vksat = self.parent.next_sh.reverse_sdic(hsat)
                 pvs = []
-                for v, ch in self.parent.chdic.items():
-                    if ch['tnode'].check_sat(vksat):
-                        # if verify_sat(ch['vk12dic'], vksat):
+                for v, tn in self.parent.chdic.items():
+                    if tn.check_sat(vksat):
                         pvs.append(v)
                 if len(pvs) > 0:
-                    # self.psearch_dic[val] = pvs
-                    self.chdic[val]['parent-ch-keys'] = pvs
+                    tnode.pvs = pvs
                 else:
                     del_chs.append(val)
         for chval in del_chs:

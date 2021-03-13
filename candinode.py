@@ -1,40 +1,63 @@
 class CandiNode:
-    def __init__(self, smgr, snode, val, prv_cnode=None):
+    def __init__(self, smgr, snode, prv_cnode=None):
         self.smgr = smgr
-        self.val = val
         self.prv = prv_cnode
-        self.psnode = snode.parent
-        self.ch = snode.chdic[val]
-        self.tnode = self.ch['tnode']
+        self.picks = list(snode.chdic.keys())
+        self.snode = snode
         self.reset()  # reset self.pvs=full, and self.next==None
 
     def reset(self):
-        if self.psnode != None:
-            self.pvs = self.ch['parent-ch-keys'][:]
+        self.pv_dic = {}
+        if self.snode.parent != None:
+            for v in self.snode.chdic:
+                self.pv_dic[v] = self.snode.chdic[v].pvs[:]
         self.next = None
 
-    def find_next(self):
-        if len(self.pvs) == 0:
-            pass
+    def find_candi(self, candis, sat_array=None):
+        if len(self.picks) == 0:
+            return True
 
-        pchdic = self.tnode.holder.parent.chdic
-        pv = self.p
+        while len(self.picks) > 0:
+            self.val = self.picks.pop(0)
+            allowed = self.prv == None or \
+                self.val in self.prv.ch.pvs
+            if allowed:
+                break
 
-    def find_candi(self, sat_array=None):
+        if not allowed:
+            return len(self.picks) == 0
+
+        self.ch = self.snode.chdic[self.val]
+
         if sat_array == None:
             sat_array = []
 
         succ = True
         for sat in sat_array[1:]:
-            if not self.tnode.check_sat(sat):
-                return None
+            succ = self.ch['tnode'].check_sat(sat)
+            if not succ:
+                break
+        if not succ:
+            self.find_candi(candis, sat_array)
 
-        sat_array.insert(0, self.ch['hsat'])
+        new_array = sat_array[:]
 
-        if self.psnode == None:
-            return sat_array
+        new_array.insert(0, self.ch['hsat'])
 
-        pv = self.pvs.pop(0)
+        if self.snode.parent == None:
+            candis.append(new_array)
+            return len(self.picks) == 0
+
         if self.next == None:
-            self.next = CandiNode(self.smgr, self.psnode, pv, self)
-        return self.next.find_candi(sat_array)
+            self.next = CandiNode(
+                self.smgr,
+                self.snode.parent,
+                self)
+        _end = False
+        while not _end:
+            _end = self.next.find_candi(candis, new_array)
+
+        return len(self.pick) == 0
+
+    def name(self, val):
+        return f'{self.snode.name}.{val}'

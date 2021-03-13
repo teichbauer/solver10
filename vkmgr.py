@@ -1,6 +1,7 @@
 from basics import topbits_coverages, print_json
 from vklause import VKlause
 from tnode import TNode
+from satmgr import SatManager
 
 
 class VKManager:
@@ -84,9 +85,10 @@ class VKManager:
                     for vk in vks:
                         sub_vk12dic[vk.kname] = vk
             print(f'child-{val}')
-            tnode = TNode(sub_vk12dic, snode)
+            tnode = TNode(sub_vk12dic, snode, val)
             if tnode.state == 0:
-                chs[val] = {'tnode': tnode}
+                SatManager.tdic[tnode.name] = tnode
+                chs[val] = tnode
         # re-make self.bdic, based on updated vkdic (now all 3-bit vks)
         self.make_bdic()  # bdic made here will be used for .next/bestchoice
         return chs  # for making chdic with tnodes

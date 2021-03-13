@@ -3,9 +3,12 @@ from restrict import Restrict
 
 
 class TNode:
-    def __init__(self, vk12dic, holder_snode):  # t_sh):
+    def __init__(self, vk12dic, holder_snode, val):  # t_sh):
         self.vkdic = vk12dic
+        self.val = val
         self.holder = holder_snode
+        self.name = f'{self.holder.name}.{val}'
+        self.hsat = holder_snode.sh.get_sats(val)
         self._sort12()
         self.t_sh = holder_snode.next_sh
         self.restrict = Restrict(self.t_sh)

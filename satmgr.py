@@ -3,34 +3,21 @@ from candinode import CandiNode
 
 
 class SatManager:
+    tdic = {}
+
     def __init__(self, start_snode):
         self.start_snode = start_snode
         self.candis = []
-        self.vals = []
-        self.candi_dic = {}
-        for val in start_snode.chdic:
-            self.candi_dic[val] = CandiNode(self, start_snode, val)
-            self.vals.append(val)
+        self.candinode = CandiNode(self, start_snode)
         self.sats = []
         self.limit = 10
         self.done = False  # limit reached.
         self.build_candis()
 
     def build_candis(self):
-        candis = []
-        val = self.vals.pop(0)
-        while True:
-            candi = self.candi_dic[val].find_candi()
-            if candi:
-                candis.append(candi)
-            else:
-                if len(candis) > 0:
-                    self.candis += candis
-
-                if len(self.vals) == 0:
-                    break
-                candis = []
-                val = self.vals.pop(0)
+        _end = False
+        while not _end:
+            _end = self.candinode.find_candi(self.candis)
 
     def resolve(self, endnode):
         for can in self.candis:

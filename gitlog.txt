@@ -1,3 +1,8 @@
+2021-03-13->0.152
+- SatManager has a new class-variable: tdic, holding every tnode under its name
+- add pvs, hsat to tnode, where pvs is added/assigned not in contructor,
+  but later when set-restrict 
+- coding condinode/satmgr. Still on-going.
 2021-03-13->0.151
 - progressing on satmgr
 2021-03-12->0.150
