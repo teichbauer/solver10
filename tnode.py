@@ -3,10 +3,11 @@ from restrict import Restrict
 
 
 class TNode:
-    def __init__(self, vk12dic, t_sh):
+    def __init__(self, vk12dic, holder_snode):  # t_sh):
         self.vkdic = vk12dic
+        self.holder = holder_snode
         self._sort12()
-        self.t_sh = t_sh
+        self.t_sh = holder_snode.next_sh
         self.restrict = Restrict(t_sh)
         self.bmap = {}
         self.set_bmap()

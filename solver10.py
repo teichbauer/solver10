@@ -30,8 +30,8 @@ def process(cnfname):
         sn = sn.spawn()
     # sn is of class EndNode now
 
-    satmgr = SatManager()
-    satmgr.build_solutions(sn.parent)
+    satmgr = SatManager(sn.parent)
+    satmgr.resolve(sn)
     # satmgr.resolve(sn)
 
     return satmgr.sats
