@@ -10,6 +10,7 @@ class CandiNode:
 
     def find_next(self):
         if len(self.pvs) == 0:
+            pass
 
         pchdic = self.tnode.holder.parent.chdic
         pv = self.p

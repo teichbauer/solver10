@@ -8,7 +8,7 @@ class TNode:
         self.holder = holder_snode
         self._sort12()
         self.t_sh = holder_snode.next_sh
-        self.restrict = Restrict(t_sh)
+        self.restrict = Restrict(self.t_sh)
         self.bmap = {}
         self.set_bmap()
         self._proc_vk1s()

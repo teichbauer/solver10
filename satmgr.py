@@ -7,6 +7,7 @@ class SatManager:
         self.start_snode = start_snode
         self.candis = []
         self.vals = []
+        self.candi_dic = {}
         for val in start_snode.chdic:
             self.candi_dic[val] = CandiNode(self, start_snode, val)
             self.vals.append(val)
