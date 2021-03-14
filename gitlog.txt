@@ -1,3 +1,7 @@
+2021-03-14->0.154
+- satmgr.build_candis now can collect all paths
+- bugged candinode it works now.
+- TBD: I may do path ->sats converting in SatManager.
 2021-03-14->0.153
 - make use of SatManager.tdic's saved all tnodes. sat_array now holds only the 
   names of tnode.name. And tnode.check_sat will use that, and each candi-node 

@@ -7,16 +7,19 @@ class TNode:
         self.vkdic = vk12dic
         self.val = val
         self.holder = holder_snode
+        self.t_sh = holder_snode.next_sh
         self.name = f'{self.holder.name}.{val}'
         self.hsat = holder_snode.sh.get_sats(val)
         self._sort12()
-        self.t_sh = holder_snode.next_sh
         self.restrict = Restrict(self.t_sh)
         self.bmap = {}
         self.set_bmap()
         self._proc_vk1s()
         self._proc_vk2s()
         self.check_state()
+        # -----------
+        # self.pvs will be assigned by snode.restrict. it is a list of
+        # ch-keys of highter-nov tnodes, that are compatible with this tnode.
 
     def check_state(self):
         self.state = 0
