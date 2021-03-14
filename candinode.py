@@ -4,6 +4,7 @@ class CandiNode:
         self.prv = prv_cnode
         self.picks = list(snode.chdic.keys())
         self.snode = snode
+        self.vdic = {}
         self.reset()  # reset self.pvs=full, and self.next==None
 
     def reset(self):
@@ -33,8 +34,12 @@ class CandiNode:
             sat_array = []
 
         succ = True
-        for sat in sat_array[1:]:
-            succ = self.ch['tnode'].check_sat(sat)
+        for tname in sat_array[1:]:
+            if tname in self.vdic:
+                succ = self.vdic[tname]
+            else:
+                succ = self.ch.check_sat(self.smgr.tdic[tname].hsat)
+                self.vdic[tname] = succ
             if not succ:
                 break
         if not succ:
@@ -42,7 +47,8 @@ class CandiNode:
 
         new_array = sat_array[:]
 
-        new_array.insert(0, self.ch['hsat'])
+        # new_array.insert(0, self.ch.hsat)
+        new_array.insert(0, self.ch.name)
 
         if self.snode.parent == None:
             candis.append(new_array)
