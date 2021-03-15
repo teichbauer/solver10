@@ -5,8 +5,6 @@ from candinode import CandiNode
 class SatManager:
     # tdic holds all tnode, under its name
     tdic = {}
-    # v-dic: verif-result for less-nov tnode.hsat. fed by smgr
-    vdic = {}
 
     def __init__(self, start_snode):
         self.start_snode = start_snode
@@ -21,7 +19,7 @@ class SatManager:
         _end = False
         while not _end:
             _end = self.candinode.find_candi(self.candis)
-            break
+            # break
         x = 1
 
     def resolve(self, endnode):

@@ -25,15 +25,14 @@ class CandiNode:
             new_array = []
         else:
             succ = True
-            for tname in sat_array[1:]:
-                if self.ch.name in self.smgr.vdic and \
-                        tname in self.smgr.vdic[self.ch.name]:
-                    succ = self.smgr.vdic[self.ch.name][tname]
-                else:
-                    succ = self.ch.check_sat(self.smgr.tdic[tname].hsat)
-                    self.smgr.vdic.setdefault(self.ch.name, {})[tname] = succ
-                if not succ:
-                    break
+            if len(sat_array) > 1:
+                vt = [sat_array[0]]
+                ss = self.smgr.tdic[vt[0]].hsat.copy()
+                for tn in sat_array[1:]:
+                    vt.append(tn)
+                    ss.update(self.smgr.tdic[tn].hsat)
+                succ = self.ch.check_sat(ss, True)
+
             if not succ:
                 return self.find_candi(candis, sat_array)
             new_array = sat_array[:]

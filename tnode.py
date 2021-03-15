@@ -112,7 +112,9 @@ class TNode:
                 lst.append((kn, v))
     # end of set_bmap ----------------------------------------
 
-    def check_sat(self, sdic):
+    def check_sat(self, sdic, reverse_sh=False):
+        if reverse_sh:
+            return verify_sat(self.vkdic, self.t_sh.reverse_sdic(sdic))
         return verify_sat(self.vkdic, sdic)
 
     def find_candis(self, hsats, psatnode, pvs):
