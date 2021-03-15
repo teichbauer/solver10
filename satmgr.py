@@ -21,6 +21,8 @@ class SatManager:
         _end = False
         while not _end:
             _end = self.candinode.find_candi(self.candis)
+            break
+        x = 1
 
     def resolve(self, endnode):
         for can in self.candis:
@@ -29,7 +31,12 @@ class SatManager:
                 break
 
     def convert_sat(self, candi, endnode):
-        sat = {}
+        filter_sat = {}
+        tnodes = [self.tdic[tname] for tname in candi]
+        for tn in tnodes:
+            filter_sat.update(tn.hsat)
+        endnode.solve(filter_sat, tnodes)
+
         self.sats.append(sat)
         self.done = len(self.sats) >= self.limit
 

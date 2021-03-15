@@ -1,3 +1,6 @@
+2021-03-14->0.155
+- fix in vklause/hit for value is a sat-dic; fix in clone_tail
+- progress in satmgr and endnode
 2021-03-14->0.154
 - satmgr.build_candis now can collect all paths
 - bugged candinode it works now.

@@ -34,13 +34,13 @@ class VKlause:
         else:
             return None
 
-    def clone_tail(self, tail_sat, nov):
+    def clone_tail(self, tailbits, nov):
         d = {}
         for b, v in self.dic.items():
             if b in tail_sat:
                 d[b] = v
         if len(d) > 0:
-            return VKlause(self.kname, d, tail_sat, nov)
+            return VKlause(self.kname, d, nov)
         return None
 
     def set_value_and_mask(self):
@@ -83,10 +83,14 @@ class VKlause:
         elif type(v) == type({}):
             hit = False
             hit_cnt = 0
+            in_cnt = 0
             i = 0
             while (not hit) and i < self.nob:
                 k = self.bits[i]
-                if k in v and v[k] == self.dic[k]:
-                    hit_cnt += 1
+                if k in v:
+                    in_cnt += 1
+                    if v[k] == self.dic[k]:
+                        hit_cnt += 1
                 i += 1
-            return hit_cnt == self.nob
+            # return hit_cnt == self.nob
+            return hit_cnt == in_cnt
