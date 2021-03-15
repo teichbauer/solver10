@@ -1,3 +1,6 @@
+from vk12mgr import VK12Manager
+
+
 class EndNode:
     def __init__(self, parent, sh):
         self.parent = parent
@@ -19,3 +22,4 @@ class EndNode:
             print(f'add vks from {tn.name}')
             for kn, vk in tn.vkdic.items():
                 self.add_vk(filter_dic, vk, tn.t_sh)
+        vk12mgr = VK12Manager(self.vkdic, self.nov)

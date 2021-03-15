@@ -1,3 +1,5 @@
+2021-03-15->0.151
+- vk12mgr from solver9
 2021-03-15->0.159
 - solved issue found in 0.158: merge hsas before do tn.check_sat
   cfg12-55.json: candis number from 43 reduced to 24 (delta:19)
