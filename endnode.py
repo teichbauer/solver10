@@ -9,8 +9,8 @@ class EndNode:
         self.vkdic = {}
         self.sats = []
 
-    def add_vk(self, satfilter, vk):
-        if vk.filter_hit(satfilter):
+    def add_vk(self, satfilter, vk, sh):
+        if vk.filter_hit(satfilter, sh):
             tvk = vk.clone_tail(seld.sh.varray, self.nov)
         if tvk:
             self.vkdic[tvk.kname] = tvk
@@ -19,4 +19,4 @@ class EndNode:
         for tn in tnodes:
             print(f'add vks from {tn.name}')
             for kn, vk in tn.vkdic.items():
-                self.add_vk(filter_dic, vk)
+                self.add_vk(filter_dic, vk, tn.t_sh)

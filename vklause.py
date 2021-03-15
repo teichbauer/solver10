@@ -81,27 +81,19 @@ class VKlause:
             # in_v==False: at least one p not in v
             return in_v
         elif type(v) == type({}):
-            hit = False
             hit_cnt = 0
-            i = 0
-            while (not hit) and i < self.nob:
-                k = self.bits[i]
-                if k in v and v[k] == self.dic[k]:
+            for bit, value in self.dic.items():
+                if bit in v and v[b] == value:
                     hit_cnt += 1
-                i += 1
             return hit_cnt == self.nob
 
-    def filter_hit(self, dic):
-        hit = False
+    def filter_hit(self, dic, sh):
         hit_cnt = 0
         in_cnt = 0
-        i = 0
-        while (not hit) and i < self.nob:
-            b = self.bits[i]
-            if k in dic:
+        for bit, value in self.dic.items():
+            v = sh.varray[bit]
+            if v in dic:
                 in_cnt += 1
-                if dic[k] == self.dic[k]:
+                if value == dic[v]:
                     hit_cnt += 1
-            i += 1
-        # return hit_cnt == self.nob
         return hit_cnt == in_cnt
