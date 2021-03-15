@@ -83,17 +83,38 @@ class VKlause:
         elif type(v) == type({}):
             hit_cnt = 0
             for bit, value in self.dic.items():
-                if bit in v and v[b] == value:
+                if bit in v and v[bit] == value:
                     hit_cnt += 1
             return hit_cnt == self.nob
 
-    def filter_hit(self, dic, sh):
-        hit_cnt = 0
-        in_cnt = 0
+    def filter_hit(self, dic, sh, nov):
+        ''' test self.dic's each bit: if all of them:
+            1. it(sh-transformed to v) is in given dic
+               1.a if it is in dic, count them to in-cnt
+               1.b if the in-bit, count it to in-cnt, and
+                   if its value equals the dic[v] > count to hit-cnt
+               at the end, if in-cnt == hit-cnt, R = True, if not = R = False
+            2. the bit(s) not in dic, build td{} from self.dic.
+               td with keys from bit value, no the converted v
+            return R, td
+            Note:
+            vk cannot have all its bit in dic, and all hit - that would
+            be a logic-bug: the candi-path containing the tnode with such
+            a vk, should not be in satmgr.candis.
+            '''
+        td = {}
         for bit, value in self.dic.items():
             v = sh.varray[bit]
             if v in dic:
-                in_cnt += 1
-                if value == dic[v]:
-                    hit_cnt += 1
-        return hit_cnt == in_cnt
+                # one mis-match enough makes it not-hit.
+                # if not-hit, tdic(empty or not) not used
+                if value != dic[v]:
+                    return None
+            else:
+                td[bit] = value
+        # getting here means this vk hit in dic-range. And it
+        # must be a pratial-hit: outside bit (tdic) must exist
+        if len(td) == 0:
+            raise Exception(f'vk {self.kname} wrong in this candi-path!')
+        else:
+            return VKlause(self.kname, td, nov)

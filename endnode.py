@@ -10,10 +10,9 @@ class EndNode:
         self.sats = []
 
     def add_vk(self, satfilter, vk, sh):
-        if vk.filter_hit(satfilter, sh):
-            tvk = vk.clone_tail(seld.sh.varray, self.nov)
-        if tvk:
-            self.vkdic[tvk.kname] = tvk
+        tail_vk = vk.filter_hit(satfilter, sh, self.nov)
+        if tail_vk:
+            self.vkdic[vk.kname] = tail_vk
 
     def solve(self, filter_dic, tnodes):
         for tn in tnodes:
