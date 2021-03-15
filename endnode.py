@@ -10,7 +10,7 @@ class EndNode:
         self.sats = []
 
     def add_vk(self, satfilter, vk):
-        if vk.hit(satfilter):
+        if vk.filter_hit(satfilter):
             tvk = vk.clone_tail(seld.sh.varray, self.nov)
         if tvk:
             self.vkdic[tvk.kname] = tvk

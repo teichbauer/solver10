@@ -83,14 +83,25 @@ class VKlause:
         elif type(v) == type({}):
             hit = False
             hit_cnt = 0
-            in_cnt = 0
             i = 0
             while (not hit) and i < self.nob:
                 k = self.bits[i]
-                if k in v:
-                    in_cnt += 1
-                    if v[k] == self.dic[k]:
-                        hit_cnt += 1
+                if k in v and v[k] == self.dic[k]:
+                    hit_cnt += 1
                 i += 1
-            # return hit_cnt == self.nob
-            return hit_cnt == in_cnt
+            return hit_cnt == self.nob
+
+    def filter_hit(self, dic):
+        hit = False
+        hit_cnt = 0
+        in_cnt = 0
+        i = 0
+        while (not hit) and i < self.nob:
+            b = self.bits[i]
+            if k in dic:
+                in_cnt += 1
+                if dic[k] == self.dic[k]:
+                    hit_cnt += 1
+            i += 1
+        # return hit_cnt == self.nob
+        return hit_cnt == in_cnt
