@@ -18,6 +18,12 @@ class VKlause:
         # void bits of the nov-bits
         self.nob = len(self.bits)             # 1, 2 or 3
 
+    def drop_bit(self, bit):
+        if len(self.bits) > 1 and bit in self.bits:
+            self.bits.remove(bit)
+            self.nob -= 1
+            self.dic.pop(bit)
+
     def clone(self, bits2b_dropped=None):
         # bits2b_dropped: list of bits to be dropped.
         # They must be the top-bits

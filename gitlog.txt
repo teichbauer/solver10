@@ -1,3 +1,6 @@
+2021-03-15->0.152
+- vklause has a new drop_bit method
+- code vk12mgr. progress on endnode
 2021-03-15->0.151
 - vk12mgr from solver9
 2021-03-15->0.159
