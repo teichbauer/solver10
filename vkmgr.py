@@ -84,7 +84,7 @@ class VKManager:
                     vks = tdic[cvr]
                     for vk in vks:
                         sub_vk12dic[vk.kname] = vk
-            print(f'child-{val}')
+            # print(f'child-{val}')
             tnode = TNode(sub_vk12dic, snode, val)
             if tnode.state == 0:
                 SatManager.tdic[tnode.name] = tnode

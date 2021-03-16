@@ -15,7 +15,7 @@ class EndNode:
 
     def add_vk(self, satfilter, vk, sh):
         tail_vk = vk.filter_hit(satfilter, sh, self.nov)
-        added = True
+        added = False
         if tail_vk:
             added = self.vk12mgr.add_vk(tail_vk)
         return added
@@ -28,11 +28,12 @@ class EndNode:
             print(f'add vks from {tn.name}')
             for kn, vk in tn.vkdic.items():
                 added = self.add_vk(filter_dic, vk, tn.t_sh)
-                if not added:
-                    # returned: vk12mgr.valid (is False)
-                    break
-            if not self.vk12mgr.valid:
-                break
-        if self.vk12mgr.valid:
-            return True
-        return False
+                msg = vk.kname + [' not added', ' added'][added]
+                print(msg)
+                if not self.vk12mgr.valid:
+                    return False
+        self.chdic = self.vk12mgr.morph()
+        for v, enode in self.chdic.items():
+            if enode.resolve():
+                pass
+        return True

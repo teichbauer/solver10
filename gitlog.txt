@@ -1,3 +1,6 @@
+2021-03-16->0.154
+- refactored vk12mgr, satmgr, endnode, vkmgr
+- node12
 2021-03-16->0.153
 - progress: made vk12mgr for n6.0 + n9.2 + n12.6 -> vk12mgr.valid == False
 2021-03-15->0.152

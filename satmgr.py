@@ -33,10 +33,11 @@ class SatManager:
         tnodes = [self.tdic[tname] for tname in candi]
         for tn in tnodes:
             filter_sat.update(tn.hsat)
+        print(f'solving {candi}')
         if endnode.solve(filter_sat, tnodes):
             self.sats += endnode.sats
-
-        self.sats.append(sat)
+        else:
+            print(f'path: {candi} failed generating sat.')
         self.done = len(self.sats) >= self.limit
 
     def sat_val(self, sat):
