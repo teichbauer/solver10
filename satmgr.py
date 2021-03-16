@@ -33,7 +33,8 @@ class SatManager:
         tnodes = [self.tdic[tname] for tname in candi]
         for tn in tnodes:
             filter_sat.update(tn.hsat)
-        endnode.solve(filter_sat, tnodes)
+        if endnode.solve(filter_sat, tnodes):
+            self.sats += endnode.sats
 
         self.sats.append(sat)
         self.done = len(self.sats) >= self.limit

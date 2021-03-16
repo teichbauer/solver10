@@ -27,20 +27,22 @@ class VK12Manager:
                             self.invalid_info = f'vk1s:{vk.kname} vs {kn}'
                             self.valid = False
                             return False
-                        # else: self.vkdic[kn].dic[bit] == vk.dic[bit]
-                        #   ignore vk: a duplicate exits already
+                        else:  # self.vkdic[kn].dic[bit] == vk.dic[bit]
+                            # ignore vk: a duplicate exits already
+                            return True
                     elif kn in self.kn2s:
                         if self.vkdic[kn].dic[bit] == vk.dic[bit]:
                             # a vk2 has the same v on this bit:
-                            # delete vk2
+                            # remove vk2
                             self.kn2s.remove(kn)
-                            del self.vkdic[kn]
-                            self.bdic[bit].remove(kn)
+                            vkn = self.vkdic.pop(kn)
+                            for b in vkn.bits:
+                                self.bdic[b].remove(kn)
             # add the vk
             self.vkdic[vk.kname] = vk
-            self.kn1s.append(kv.kname)
+            self.kn1s.append(vk.kname)
             self.bdic.setdefault(bit, []).append(vk.kname)
-
+            return True
         elif vk.nob == 2:
             # if an existin vk1 covers vk?
             for kn in self.kn1s:
@@ -66,7 +68,7 @@ class VK12Manager:
                         vkx = self.vkdic.pop(pvk.kname)
                         self.kn2s.remove(pvk.kname)
                         for b in bs:
-                            self.bdic[b]].remove(pvk.kname)
+                            self.bdic[b].remove(pvk.kname)
 
                         # vk not added. But add vkx, after dropped the bit
                         vkx.drop_bit(bs[1])
@@ -80,16 +82,17 @@ class VK12Manager:
                         vkx = self.vkdic.pop(pvk.kname)
                         self.kn2s.remove(pvk.kname)
                         for b in bs:
-                            self.bdic[b]].remove(pvk.kname)
+                            self.bdic[b].remove(pvk.kname)
 
                         # add pvk, after dropping bs[1]
                         pvk.drop_bit(bs[0])
                         return self.add_vk(pvk)
                     else:
+                        pass
                         # non bit from vk has the same value as pvk's
                         # add vk
             for b in bs:
-                self.bdic[b].append(vk.kname)
+                self.bdic.setdefault(b, []).append(vk.kname)
             self.kn2s.append(vk.kname)
-            self.vkdic[vk.kname]= vk
+            self.vkdic[vk.kname] = vk
             return True
